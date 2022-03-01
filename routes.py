@@ -42,11 +42,14 @@ import flask
 from crypt import methods
 from flask import Flask, render_template, request
 from flask_mail import *
+from dotenv import load_dotenv
+load_dotenv()
+import os
 CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
 URL = "https://127.0.0.1:5000/social-auth/login/facebook/"
 
-FB_CLIENT_ID = "904603276889192"
-FB_CLIENT_SECRET = "fa6f9ddaa22472a6df4c5993046b005c"
+FB_CLIENT_ID =os.getenv("FB_CLIENT_ID")
+FB_CLIENT_SECRET =os.getenv("FB_CLIENT_SECRET")
 
 FB_AUTHORIZATION_BASE_URL = "https://www.facebook.com/dialog/oauth"
 FB_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
@@ -160,10 +163,12 @@ def auth():
     return render_template('google.html')
 
 #sending message 
+email_user=os.getenv("MAIL_USERNAME")
+email_pass=os.getenv("MAIL_PASSWORD")
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'niyodusengamussa01@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Mussa@1997'
+app.config['MAIL_USERNAME'] =email_user
+app.config['MAIL_PASSWORD'] =email_pass
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -173,7 +178,7 @@ def send_message():
   if request.method == 'POST':
     email = request.form['email']
     msg="Your account created successfully"
-    message = Message(sender="niyodusengamussa01@@gmail.com", recipients=[email])
+    message = Message(sender=email_user, recipients=[email])
     message.body = msg
 
     mail.send(message)

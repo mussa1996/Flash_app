@@ -12,6 +12,10 @@ from flask_login import (
     logout_user,
     login_required,
 )
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.login_view = "login"
@@ -28,9 +32,9 @@ def create_app():
     app.secret_key = 'secret-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['SECRET_KEY'] = '<mussa_is_study_python>'
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.debug = True
-    toolbar = DebugToolbarExtension(app) 
+    # toolbar = DebugToolbarExtension(app) 
     login_manager.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
